@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
+import Toast from "react-native-toast-message";
 const queryClient = new QueryClient();
 
 SplashScreen.preventAutoHideAsync();
@@ -30,6 +31,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+      <Toast />
     </QueryClientProvider>
   );
 }

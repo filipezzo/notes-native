@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { FlatList, Text, View } from "react-native";
 import PageLayout from "./components/PageLayout";
 import RenderItem from "./components/RenderItem";
 import { Select } from "./components/Select";
 import Spinner from "./components/Spinner";
-import { useTasks } from "./hooks/useTasks";
+import { useHomeController } from "./controllers/useHomeController";
 
 export default function Home() {
-  const { data: tasks, isLoading } = useTasks();
-  const [filterby, setFilterby] = useState("Para fazer");
-
-  const handleChange = (filter) => setFilterby(filter);
-  const filteredTasks = tasks?.filter((task) => task.step === filterby);
+  const { filterby, filteredTasks, handleChange, isLoading, tasks } =
+    useHomeController();
 
   return (
     <PageLayout isHomepage>

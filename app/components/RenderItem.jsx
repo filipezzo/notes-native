@@ -1,29 +1,9 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigation } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
-import { getNextStep } from "../helpers/getNextStep";
-import { useRemoveTask } from "../hooks/useRemoveTask";
-import { useStatusTask } from "../hooks/useStatusTask";
+import { useItemController } from "../controllers/useItemController";
 
 export default function RenderItem({ item }) {
-  const nav = useNavigation();
-  const queryClient = useQueryClient();
-
-  const { isPending, mutateAsync: removeTask } = useRemoveTask();
-
-  const { isPending: isPendingTask, mutateAsync: updateTask } = useStatusTask();
-
-  const handlePress = async () => {
-    const nextStep = getNextStep(item.step);
-    await updateTask({ id: item.id, newStep: nextStep });
-  };
-
-  const handleDelete = async () => await removeTask(item.id);
-
-  const handleEdit = () => {
-    const id = item.id;
-    nav.navigate("edit", { id });
-  };
+  const { handleDelete, handleEdit, handlePress, isPending, isPendingTask } =
+    useItemController(item);
 
   return (
     <View className="  rounded-md border-none shadow-md p-5 bg-black my-2 opacity-95">

@@ -1,62 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocalSearchParams } from "expo-router/build/hooks";
-import React, { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import React from "react";
+import { Controller } from "react-hook-form";
 import { Button, Text, TextInput, View } from "react-native";
-import { z } from "zod";
 import PageLayout from "./components/PageLayout";
 import { Select } from "./components/Select";
 import Spinner from "./components/Spinner";
-import { useEditTask } from "./hooks/useEditTask";
-import { useTasks } from "./hooks/useTasks";
-
-const taskSchema = z.object({
-  title: z.string().min(1, "O título não pode ficar vazio"),
-  description: z.string().min(5, "No minimo 5 caracteres."),
-  step: z.enum(
-    ["Em andamento", "Para fazer", "Pronto"],
-    "Selecione a opção correta"
-  ),
-});
+import { useEditController } from "./controllers/useEditController";
 
 export default function Edit() {
-  const { id } = useLocalSearchParams();
-
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(taskSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      step: "Para fazer",
-    },
-  });
-
-  const { data, isLoading } = useTasks();
-  const filteredTask = data?.find((task) => task.id === +id);
-
-  const { mutateAsync, isPending } = useEditTask(filteredTask.id);
-
-  const onSubmit = async ({ title, description, step }) => {
-    const updatedTask = {
-      title,
-      description,
-      step,
-    };
-    mutateAsync(updatedTask);
-  };
-
-  useEffect(() => {
-    if (filteredTask) {
-      setValue("title", filteredTask.title);
-      setValue("description", filteredTask.description);
-      setValue("step", filteredTask.step);
-    }
-  }, [filteredTask]);
+  const { control, onSubmit, handleSubmit, errors, isLoading, isPending } =
+    useEditController();
 
   if (isLoading) {
     return (

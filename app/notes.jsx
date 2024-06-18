@@ -1,45 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Button, Text, TextInput, View } from "react-native";
-import { z } from "zod";
 import PageLayout from "./components/PageLayout";
 import { Select } from "./components/Select";
-import { useCreateTask } from "./hooks/useCreateTask";
-
-const taskSchema = z.object({
-  title: z.string().min(1, "O título não pode ficar vazio"),
-  description: z.string().min(5, "No minimo 5 caracteres."),
-  step: z.enum(
-    ["Em andamento", "Para fazer", "Pronto"],
-    "Selecione a opção correta"
-  ),
-});
+import { useCreateController } from "./controllers/useCreateController";
 
 export default function Notes() {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(taskSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      step: "Para fazer",
-    },
-  });
+  const { control, errors, isPending, handleSubmit, onSubmit } =
+    useCreateController();
 
-  const { mutateAsync, isPending } = useCreateTask();
-
-  const onSubmit = async ({ title, description, step }) => {
-    const newTask = {
-      title,
-      description,
-      step,
-    };
-    await mutateAsync(newTask);
-  };
   return (
     <PageLayout>
       <View className="mt-5 p-5  ">
